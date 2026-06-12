@@ -1,0 +1,23 @@
+{
+  "name": "rwi-site",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Reshaping White Identity — retreat site. Static front-end on Netlify, media + content on Supabase.",
+  "scripts": {
+    "dev": "netlify dev",
+    "deploy": "netlify deploy --build --prod",
+    "deploy:preview": "netlify deploy --build",
+    "db:push": "supabase db push",
+    "functions:list": "netlify functions:list"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.45.0"
+  },
+  "devDependencies": {
+    "netlify-cli": "^17.0.0",
+    "supabase": "^1.180.0"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

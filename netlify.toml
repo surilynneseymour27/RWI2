@@ -1,0 +1,68 @@
+# ─────────────────────────────────────────────────────────────
+#  Netlify configuration for the RWI site
+#  Static front-end in /public, serverless API in /netlify/functions
+# ─────────────────────────────────────────────────────────────
+
+[build]
+  # No build step: the site is a single self-contained index.html.
+  publish = "public"
+  functions = "netlify/functions"
+
+[functions]
+  # Use the modern Node runtime for the serverless functions.
+  node_bundler = "esbuild"
+
+# The front-end calls /api/get-upload-url and /api/save-submission.
+# Map those friendly paths to the deployed functions.
+[[redirects]]
+  from = "/api/get-upload-url"
+  to = "/.netlify/functions/get-upload-url"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/save-submission"
+  to = "/.netlify/functions/save-submission"
+  status = 200
+  force = true
+
+# Optional: a read endpoint for public media (future video hosting).
+[[redirects]]
+  from = "/api/get-media-url"
+  to = "/.netlify/functions/get-media-url"
+  status = 200
+  force = true
+
+# Optional: a content endpoint for editable apply-section text.
+[[redirects]]
+  from = "/api/get-content"
+  to = "/.netlify/functions/get-content"
+  status = 200
+  force = true
+
+# ── Security headers ─────────────────────────────────────────
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "camera=(self), microphone=(self), geolocation=()"
+
+# Long-cache the big embedded asset file; HTML stays fresh.
+[[headers]]
+  for = "/index.html"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+# Hashed asset files never change content, so cache them aggressively.
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# The share card can cache for a day.
+[[headers]]
+  for = "/og-card.png"
+  [headers.values]
+    Cache-Control = "public, max-age=86400"
